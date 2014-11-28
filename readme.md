@@ -6,6 +6,7 @@
 - **laravel-mongodb** for MongoDB object access (https://github.com/jenssegers/laravel-mongodb)
 - Uses Laravel's Cache for accessing file/memory cache
 - Observers to invalidate document index and/or cache
+- Analytics are stored and queried with Interaction models, and InteractableTrait
 
 
 ## Installation
@@ -20,7 +21,7 @@
 
 
 ## Configuration
-Configuration is located at app/config/ and app/config/{env}/
+Configuration is located at ```app/config/ and app/config/{env}/```
 database.php in "testing", "local", and production, by default uses sqlite for relational database, to switch to mysql, simply set 'default' to 'mysql'
 cache.php in "local", and production, by default uses file cache for simplicity, you can switch to "memcached" or "redis" as needed, for "testing" environment, it utilizes the Array cache
 
@@ -59,22 +60,23 @@ Tests cover few important cases, including:
 
 ## BookManager
 - Accessed via Singleton getInstance()
-- BookManager::getInstance()->findBookDataForId($id): Attempts to locate book data in the following sources, in the following order:
+- ```BookManager::getInstance()->findBookDataForId($id)```: Attempts to locate book data in the following sources, in the following order:
 
 	1. Cache: If found, sets lastSource to "cache", then returns Book Data
 	2. Document Store: By querying through BookDocument. If found, sets lastSource to "document", stores data in Cache, and returns Book data
 	3. Database: Finds Book or fails, if found, sets lastSource to "database", stores Book data in Cache for a period of time and in Document Store, then returns Book data
 
-- $cacheMinutes in BookManager instance is used to determine TTL for cached object in minutes, default: 10 minutes
-- BookManager::getInstance()->invalidateCacheForId($id): Invalidates cache for book by ID
-- BookManager::getInstance()->invalidateIndexDocumentForId($id): Invalidates/removes document index record for book by ID
-- BookManager::getInstance()->invalidateAllForId($id): invalidates both Cache and Index Document.
+- ```$cacheMinutes``` in BookManager instance is used to determine TTL for cached object in minutes, default: 10 minutes
+- ```BookManager::getInstance()->invalidateCacheForId($id)```: Invalidates cache for book by ID
+- ```BookManager::getInstance()->invalidateIndexDocumentForId($id)```: Invalidates/removes document index record for book by ID
+- ```BookManager::getInstance()->invalidateAllForId($id)```: invalidates both Cache and Index Document.
 
 
 ## Routes
 - ```/```: Welcome page, presents a API endpoint link to latest Book
 - ```/api/books/{id}```: REST Endpoint for accessing a book by ID
 - ```/api/analytics/{ObjectType}?action={ActionName}&orderBy={OrderByField}&orderDirection={asc|desc}&groupBy={GroupByField}&dateStart={YYYY-MM-DD}&dateEnd={YYYY-MM-DD}```:
+	- ```ObjectType``` can be Book, AttributeValue, or any other model that uses ```InteractableTrait```
 	- Parameters are optional, defaults are handled internally
 
 ## Analytics Examples
@@ -206,5 +208,5 @@ Tests cover few important cases, including:
 ```
 
 ## TODO
-- Consider polymorphic relationship for AttributeValue
+- Consider implementing polymorphic relationship ```Attributable``` for AttributeValue on Book and future models for EAV support
 - More test coverage
