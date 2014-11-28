@@ -23,30 +23,28 @@ trait InteractableTrait {
 
         // Attach to created event, create an Interaction for given object and user
         static::created(function($model) {
-			$interaction = new Interaction;
-            $interaction->action = 'created';
-			if ($model->user_id)
-                $interaction->user_id = $model->user_id;
-            if (isset($model->interactableRelatedId) && isset($model->interactableRelatedType))
-            {
-                $interaction->setAttribute($interaction->relatable()->getForeignKey(), $model->getAttribute($model->interactableRelatedId));
-                $interaction->setAttribute($model->relatedInteractions()->getPlainMorphType(), $model->interactableRelatedType);
-            }
-			$model->interactions()->save($interaction);
+		$interaction = new Interaction;
+		$interaction->action = 'created';
+		if ($model->user_id) $interaction->user_id = $model->user_id;
+		if (isset($model->interactableRelatedId) && isset($model->interactableRelatedType))
+		{
+			$interaction->setAttribute($interaction->relatable()->getForeignKey(), $model->getAttribute($model->interactableRelatedId));
+			$interaction->setAttribute($model->relatedInteractions()->getPlainMorphType(), $model->interactableRelatedType);
+		}
+		$model->interactions()->save($interaction);
         });
 
         // Attach to updated event, create an Interaction for given object and user
         static::updated(function($model) {
-			$interaction = new Interaction;
-            $interaction->action = 'updated';
-			if ($model->user_id)
-                $interaction->user_id = $model->user_id;
-            if (isset($model->interactableRelatedId) && isset($model->interactableRelatedType))
-            {
-                $interaction->setAttribute($interaction->relatable()->getForeignKey(), $model->getAttribute($model->interactableRelatedId));
-                $interaction->setAttribute($model->relatedInteractions()->getPlainMorphType(), $model->interactableRelatedType);
-            }
-			$model->interactions()->save($interaction);
+		$interaction = new Interaction;
+            	$interaction->action = 'updated';
+		if ($model->user_id) $interaction->user_id = $model->user_id;
+            	if (isset($model->interactableRelatedId) && isset($model->interactableRelatedType))
+            	{
+	    		$interaction->setAttribute($interaction->relatable()->getForeignKey(), $model->getAttribute($model->interactableRelatedId));
+	    		$interaction->setAttribute($model->relatedInteractions()->getPlainMorphType(), $model->interactableRelatedType);
+		}
+		$model->interactions()->save($interaction);
         });
 
         // Attach to deleted event, delete all Interaction(s) for given object
