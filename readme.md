@@ -71,14 +71,14 @@ Tests cover few important cases, including:
 
 
 ## Routes
-- /: Welcome page, presents a API endpoint link to latest Book
-- /api/books/{id}" REST Endpoint for accessing a book by ID
-- /api/analytics/{ObjectType}?action={ActionName}&orderBy={OrderByField}&orderDirection={asc|desc}&groupBy={GroupByField}&dateStart={YYYY-MM-DD}&dateEnd={YYYY-MM-DD}
+- ```/```: Welcome page, presents a API endpoint link to latest Book
+- ```/api/books/{id}```: REST Endpoint for accessing a book by ID
+- ```/api/analytics/{ObjectType}?action={ActionName}&orderBy={OrderByField}&orderDirection={asc|desc}&groupBy={GroupByField}&dateStart={YYYY-MM-DD}&dateEnd={YYYY-MM-DD}```:
 	- Parameters are optional, defaults are handled internally
 
 ## Analytics Examples
 - Attribute ID Usage Counts: 
-	- Example Request: /api/analytics/attributevalue?action=created&orderBy=count&orderDirection=desc&groupBy=relatable_id&dateStart=2014-11-28&dateEnd=2014-12-01
+	- Example Request: ```/api/analytics/attributevalue?action=created&orderBy=count&orderDirection=desc&groupBy=relatable_id&dateStart=2014-11-28&dateEnd=2014-12-01```
 	- Example Response:
 ```json
 [{
@@ -120,7 +120,7 @@ Tests cover few important cases, including:
 }]
 ```
 - Book Creators By Book Count
-	- Example Request: http://localhost:8000/api/analytics/book?action=created&orderBy=count&orderDirection=desc&groupBy=user_id&dateStart=2014-11-28&dateEnd=2014-12-01
+	- Example Request: ```/api/analytics/book?action=created&orderBy=count&orderDirection=desc&groupBy=user_id&dateStart=2014-11-28&dateEnd=2014-12-01```
 	- Example Response:
 ```json
 [{
