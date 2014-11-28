@@ -41,8 +41,11 @@ trait InteractableTrait {
             $interaction->action = 'updated';
 			if ($model->user_id)
                 $interaction->user_id = $model->user_id;
-            if (isset($model->interactableRelatedId))
+            if (isset($model->interactableRelatedId) && isset($model->interactableRelatedType))
+            {
                 $interaction->setAttribute($interaction->relatable()->getForeignKey(), $model->getAttribute($model->interactableRelatedId));
+                $interaction->setAttribute($model->relatedInteractions()->getPlainMorphType(), $model->interactableRelatedType);
+            }
 			$model->interactions()->save($interaction);
         });
 
