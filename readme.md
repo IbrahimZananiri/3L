@@ -12,18 +12,18 @@
 ## Installation
 1. ```git clone``` repo
 2. Install PHP-MongoDB (http://php.net/manual/en/book.mongo.php)
-3. run ```composer install``` (make sure composer is installed)
-4. run ```php artisan db:create --env=local```
-5. run ```php artisan migrate --env=local```
-6. run ```php artisan db:seed --env=local```
-7. run ```php artisan serve```
+3. Install dependencies with ```composer install``` (make sure composer is installed)
+4. Create database if it does not exist ```php artisan db:create --env=local```
+5. Run database migrations ```php artisan migrate --env=local```
+6. Seed database ```php artisan db:seed --env=local```
+7. Run buit-in server ```php artisan serve```
 
 
 
 ## Configuration
-Configuration is located at ```app/config/ and app/config/{env}/```
-database.php in "testing", "local", and production, by default uses sqlite for relational database, to switch to mysql, simply set 'default' to 'mysql'
-cache.php in "local", and production, by default uses file cache for simplicity, you can switch to "memcached" or "redis" as needed, for "testing" environment, it utilizes the Array cache
+- Configuration is located at ```app/config/ and app/config/{env}/```
+- database.php in "testing", "local", and production, by default uses sqlite for relational database, for testing it configures an in-memory sqlite database. To switch any environment to mysql, simply set 'default' to 'mysql'.
+- cache.php in "local", and production, by default uses file cache for simplicity, you can switch to "memcached" or "redis" as needed, for "testing" environment, it utilizes the Array cache
 
 
 ## Tests
