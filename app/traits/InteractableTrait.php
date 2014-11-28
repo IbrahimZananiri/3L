@@ -2,12 +2,12 @@
 
 trait InteractableTrait {
 
-	/**
-	 * Define the interactions relation, on "interactable" models that uses this trait
-	 *
-	 * @return \Illuminate\Database\Eloquent\Relations\Relation
-	 *
-	 */
+    /**
+     * Define the interactions relation, on "interactable" models that uses this trait
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\Relation
+     *
+     */
     public function interactions()
     {
         return $this->morphMany('Interaction', 'interactable');
