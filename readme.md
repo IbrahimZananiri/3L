@@ -6,7 +6,7 @@
 - **laravel-mongodb** for MongoDB object access (https://github.com/jenssegers/laravel-mongodb)
 - Uses Laravel's Cache for accessing file/memory cache
 - Observers to invalidate document index and/or cache
-- Analytics are stored and queried with Interaction models, and InteractableTrait
+- Analytics are stored and queried with Interaction model, and InteractableTrait is used to add analytics functionality to any model
 
 
 ## Installation
