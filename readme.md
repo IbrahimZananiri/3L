@@ -43,7 +43,8 @@ Tests cover few important cases, including:
 - [BookDocument](https://github.com/IbrahimZananiri/3L/blob/master/app/models/BookDocument.php)
 - [User](https://github.com/IbrahimZananiri/3L/blob/master/app/models/User.php)
 - [Interaction](https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php)
-	- Interaction comes with Polymorphic interactable relatio, user_id and timestamps, exposes extremely dynamic [static::analytics($options)](https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php#L20] method)
+	- Interaction comes with Polymorphic interactable relatiom, user_id and timestamps
+	- Exposes extremely dynamic method: [static::analytics($options)](https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php#L20])
 
 ## Observers
 - [BookObserver](https://github.com/IbrahimZananiri/3L/blob/master/app/observers/BookObserver.php): Invalidates both cache and index document for the book on model update and Book delete
