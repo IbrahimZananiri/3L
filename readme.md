@@ -37,21 +37,21 @@ Tests cover few important cases, including:
 
 
 ## Models
-- (Book)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/Book.php]
-- (Attribute)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/Attribute.php]
-- (AttributeValue)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/AttributeValue.php]
-- (BookDocument)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/BookDocument.php]
-- (User)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/User.php]
-- (Interaction)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php]
-	- Interaction comes with Polymorphic interactable relatio, user_id and timestamps, exposes extremely dynamic (static::analytics($options))[https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php#L20] method)
+- [Book](https://github.com/IbrahimZananiri/3L/blob/master/app/models/Book.php)
+- [Attribute](https://github.com/IbrahimZananiri/3L/blob/master/app/models/Attribute.php)
+- [AttributeValue](https://github.com/IbrahimZananiri/3L/blob/master/app/models/AttributeValue.php)
+- [BookDocument](https://github.com/IbrahimZananiri/3L/blob/master/app/models/BookDocument.php)
+- [User](https://github.com/IbrahimZananiri/3L/blob/master/app/models/User.php)
+- [Interaction](https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php)
+	- Interaction comes with Polymorphic interactable relatio, user_id and timestamps, exposes extremely dynamic [static::analytics($options)](https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php#L20] method)
 
 ## Observers
-- (BookObserver)[https://github.com/IbrahimZananiri/3L/blob/master/app/observers/BookObserver.php]: Invalidates both cache and index document for the book on model update and Book delete
-- (AttributeValueObserver)[https://github.com/IbrahimZananiri/3L/blob/master/app/observers/AttributeValueObserver.php]: Invalidates both cache and index document for related Book on AttributeValue addition, update, or removal
+- [BookObserver](https://github.com/IbrahimZananiri/3L/blob/master/app/observers/BookObserver.php): Invalidates both cache and index document for the book on model update and Book delete
+- [AttributeValueObserver](https://github.com/IbrahimZananiri/3L/blob/master/app/observers/AttributeValueObserver.php): Invalidates both cache and index document for related Book on AttributeValue addition, update, or removal
 - Event binding in InteratableTrait, see below **Traits** section
 
 ## Traits
-### (InteractableTrait)[https://github.com/IbrahimZananiri/3L/blob/master/app/traits/InteractableTrait.php]
+### [InteractableTrait](https://github.com/IbrahimZananiri/3L/blob/master/app/traits/InteractableTrait.php)
 - Allows tracking of object events, (e.g. creation, updates) for Analytics
 - A Interaction instance is created with interactor user_id, object interactable_id, object interactable_type, optional interactable_related_id, and timestamp, and then stored.
 - Adds the functionality to Models that use this trait, through a polymorphic relationship.
@@ -60,7 +60,7 @@ Tests cover few important cases, including:
 - Related Interactions are deleted when their Interactable object is deleted.
 
 ## Managers
-### (BookManager)[https://github.com/IbrahimZananiri/3L/blob/master/app/managers/BookManager.php]
+### [BookManager](https://github.com/IbrahimZananiri/3L/blob/master/app/managers/BookManager.php)
 - Accessed via Singleton getInstance()
 - ```BookManager::getInstance()->findBookDataForId($id)```: Attempts to locate book data in the following sources, in the following order:
 
@@ -75,7 +75,7 @@ Tests cover few important cases, including:
 - ```BookManager::getInstance()->invalidateAllForId($id)```: invalidates both Cache and Index Document.
 
 
-## (Routes)[https://github.com/IbrahimZananiri/3L/blob/master/app/routes.php]
+## [Routes](https://github.com/IbrahimZananiri/3L/blob/master/app/routes.php)
 - ```/```: Welcome page, presents a API endpoint link to latest Book
 - ```/api/books/{id}```: REST Endpoint for accessing a book by ID
 - ```/api/analytics/{ObjectType}?action={ActionName}&orderBy={OrderByField}&orderDirection={asc|desc}&groupBy={GroupByField}&dateStart={YYYY-MM-DD}&dateEnd={YYYY-MM-DD}```:
@@ -211,7 +211,7 @@ Tests cover few important cases, including:
 ```
 
 ## Commands
-- (CreateCommand)[https://github.com/IbrahimZananiri/3L/blob/master/app/commands/CreateCommand.php]: Creates sqlite database by reading config to facilitate installation. Runnable with: ```php artisan db:create```
+- [CreateCommand](https://github.com/IbrahimZananiri/3L/blob/master/app/commands/CreateCommand.php): Creates sqlite database by reading config to facilitate installation. Runnable with: ```php artisan db:create```
 
 ## TODO
 - Consider implementing polymorphic relationship ```Attributable``` for AttributeValue on Book and future models for EAV support
