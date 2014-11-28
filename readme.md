@@ -27,7 +27,7 @@
 
 
 ## Tests
-Make sure phpunit is installed, then run phpunit.
+Make sure phpunit is installed, then run ```phpunit```.
 
 Tests cover few important cases, including:
 - Source of data in different scenarios ("database", "document", or "cache")
@@ -37,20 +37,21 @@ Tests cover few important cases, including:
 
 
 ## Models
-- Book
-- Attribute
-- AttributeValue
-- BookDocument
-- User
-- Interaction (with Polymorphic interactable relatio, user_id and timestamps, exposes extremely dynamic static::analytics($options) method)
+- (Book)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/Book.php]
+- (Attribute)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/Attribute.php]
+- (AttributeValue)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/AttributeValue.php]
+- (BookDocument)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/BookDocument.php]
+- (User)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/User.php]
+- (Interaction)[https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php]
+	- Interaction comes with Polymorphic interactable relatio, user_id and timestamps, exposes extremely dynamic (static::analytics($options))[https://github.com/IbrahimZananiri/3L/blob/master/app/models/Interaction.php#L20] method)
 
 ## Observers
-- BookObserver: Invalidates both cache and index document for the book on model update and Book delete
-- AttributeValueObserver: Invalidates both cache and index document for related Book on AttributeValue addition, update, or removal
+- (BookObserver)[https://github.com/IbrahimZananiri/3L/blob/master/app/observers/BookObserver.php]: Invalidates both cache and index document for the book on model update and Book delete
+- (AttributeValueObserver)[https://github.com/IbrahimZananiri/3L/blob/master/app/observers/AttributeValueObserver.php]: Invalidates both cache and index document for related Book on AttributeValue addition, update, or removal
 - Event binding in InteratableTrait, see below **Traits** section
 
 ## Traits
-### InteractableTrait
+### (InteractableTrait)[https://github.com/IbrahimZananiri/3L/blob/master/app/traits/InteractableTrait.php]
 - Allows tracking of object events, (e.g. creation, updates) for Analytics
 - A Interaction instance is created with interactor user_id, object interactable_id, object interactable_type, optional interactable_related_id, and timestamp, and then stored.
 - Adds the functionality to Models that use this trait, through a polymorphic relationship.
@@ -58,7 +59,8 @@ Tests cover few important cases, including:
 - Book, Attribute and AttributeValue use this trait, so these models persist Interaction data.
 - Related Interactions are deleted when their Interactable object is deleted.
 
-## BookManager
+## Managers
+### (BookManager)[https://github.com/IbrahimZananiri/3L/blob/master/app/managers/BookManager.php]
 - Accessed via Singleton getInstance()
 - ```BookManager::getInstance()->findBookDataForId($id)```: Attempts to locate book data in the following sources, in the following order:
 
@@ -66,13 +68,14 @@ Tests cover few important cases, including:
 	2. Document Store: By querying through BookDocument. If found, sets lastSource to "document", stores data in Cache, and returns Book data
 	3. Database: Finds Book or fails, if found, sets lastSource to "database", stores Book data in Cache for a period of time and in Document Store, then returns Book data
 
+
 - ```$cacheMinutes``` in BookManager instance is used to determine TTL for cached object in minutes, default: 10 minutes
 - ```BookManager::getInstance()->invalidateCacheForId($id)```: Invalidates cache for book by ID
 - ```BookManager::getInstance()->invalidateIndexDocumentForId($id)```: Invalidates/removes document index record for book by ID
 - ```BookManager::getInstance()->invalidateAllForId($id)```: invalidates both Cache and Index Document.
 
 
-## Routes
+## (Routes)[https://github.com/IbrahimZananiri/3L/blob/master/app/routes.php]
 - ```/```: Welcome page, presents a API endpoint link to latest Book
 - ```/api/books/{id}```: REST Endpoint for accessing a book by ID
 - ```/api/analytics/{ObjectType}?action={ActionName}&orderBy={OrderByField}&orderDirection={asc|desc}&groupBy={GroupByField}&dateStart={YYYY-MM-DD}&dateEnd={YYYY-MM-DD}```:
@@ -206,6 +209,9 @@ Tests cover few important cases, including:
     }
 }]
 ```
+
+## Commands
+- (CreateCommand)[https://github.com/IbrahimZananiri/3L/blob/master/app/commands/CreateCommand.php]: Creates sqlite database by reading config to facilitate installation. Runnable with: ```php artisan db:create```
 
 ## TODO
 - Consider implementing polymorphic relationship ```Attributable``` for AttributeValue on Book and future models for EAV support
