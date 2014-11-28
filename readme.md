@@ -9,12 +9,13 @@
 
 
 ## Installation
-1. git clone repo
+1. ```git clone``` repo
 2. Install PHP-MongoDB (http://php.net/manual/en/book.mongo.php)
-3. run composer install (make sure composer is installed)
-4. run php artisan migrate --env=local
-5. run php artisan db:seed --env=local
-6. run php artisan serve --env=local
+3. run ```composer install``` (make sure composer is installed)
+4. run ```php artisan db:create --env=local```
+5. run ```php artisan migrate --env=local```
+6. run ```php artisan db:seed --env=local```
+7. run ```php artisan serve```
 
 
 
