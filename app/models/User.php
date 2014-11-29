@@ -26,9 +26,5 @@ class User extends Eloquent implements UserInterface {
 	{
 		return $this->hasMany('Book');
 	}
-
-    // public function interactions()
-    // {
-    //     return $this->morphMany('Interaction', 'interactable');
-    // }
+	
 }

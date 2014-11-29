@@ -5,7 +5,6 @@ class BookDocument extends Eloquent {
 
     protected $connection = 'mongodb';
     protected $collection = 'books';
-
-	protected $guarded = array();
+    protected $guarded = array();
 
 }

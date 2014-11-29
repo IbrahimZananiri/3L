@@ -3,15 +3,15 @@
 class BookManager {
 
 	// Singleton
-    public static function getInstance()
-    {
-        static $instance = null;
-        if (null === $instance)
-        {
-            $instance = new static();
-        }
-        return $instance;
-    }
+	public static function getInstance()
+	{
+		static $instance = null;
+		if (null === $instance)
+		{
+			$instance = new static();
+		}
+		return $instance;
+	}
 	
 	// Cache TTL in minutes
 	protected $_cacheMinutes = 10;
@@ -31,7 +31,7 @@ class BookManager {
 		return 'object:'.(new Book)->getTable().':'.$id;
     }
 
-    protected $_lastSource;
+	protected $_lastSource;
 
 	public function getLastSource()
 	{
