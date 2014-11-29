@@ -5,8 +5,8 @@ class AttributeValue extends Eloquent {
 	use InteractableTrait;
 
 	// InteractableTrait will use this value to store attribute ID in additional relation id field
-    protected $interactableRelatedId = 'attribute_id';
-    protected $interactableRelatedType = 'Attribute';
+	protected $interactableRelatedId = 'attribute_id';
+	protected $interactableRelatedType = 'Attribute';
 
 
 	public function attribute()
@@ -18,11 +18,11 @@ class AttributeValue extends Eloquent {
 	{
 		return $this->belongsTo('Book');
 	}
-
-    public static function boot()
-    {
-        parent::boot();
-        static::observe(new AttributeValueObserver);
-    }
+	
+	public static function boot()
+	{
+		parent::boot();
+		static::observe(new AttributeValueObserver);
+	}
 
 }
