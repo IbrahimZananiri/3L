@@ -2,18 +2,18 @@
 
 class Attribute extends Eloquent {
 
-	use InteractableTrait;
+    use InteractableTrait;
 
-	public $timestamps = false;
+    public $timestamps = false;
 
-	public static function findByNameOrFail($name)
-	{
-		return Attribute::where('name', '=', $name)->firstOrFail();
-	}
+    public static function findByNameOrFail($name)
+    {
+        return Attribute::where('name', '=', $name)->firstOrFail();
+    }
 
-	public function attributeValues()
-	{
-		return $this->hasMany('AttributeValue');
-	}
+    public function attributeValues()
+    {
+        return $this->hasMany('AttributeValue');
+    }
 
 }
