@@ -21,6 +21,7 @@ ClassLoader::addDirectories(array(
 	app_path().'/traits',
 	app_path().'/observers',
 	app_path().'/managers',
+    app_path().'/providers',
 
 ));
 

@@ -13,24 +13,42 @@ class BookManager {
         return $instance;
     }
 
-    // Cache TTL in minutes
-    protected $_cacheMinutes = 10;
+    protected $_primaryStore = 'BookDatabaseStore'; // default primary store, persistent, the database
 
-    public function getCacheMinutes()
+    public function getPrimaryStore()
     {
-        return $this->_cacheMinutes;
+        return $this->_primaryStore;
     }
 
-    public function setCacheMinutes($minutes)
+    public function setPrimaryStore($store)
     {
-        $this->_cacheMinutes = $minutes;
+        $this->_primaryStore = $store;
     }
 
-    public function getCacheKeyForId($id)
+    // Ordered array of stores class names, in sequenece of required retrieval and cacheing
+    protected $_secondaryStores = array(
+        'BookCacheStore',
+        'BookDocumentStore',
+    );
+
+    // using store class names
+    public function setSecondaryStores($stores)
     {
-        return 'object:'.(new Book)->getTable().':'.$id;
+        $this->_secondaryStores = $stores;
     }
 
+    public function getSecondaryStores()
+    {
+        return $this->_secondaryStores;
+    }
+
+    // Factory for Store
+    public function createStoreInstance($storeName, $options = array())
+    {
+        return new $storeName($options);
+    }
+
+    // for Tests
     protected $_lastSource;
 
     public function getLastSource()
@@ -47,69 +65,64 @@ class BookManager {
 
     /**
      * Find a Book by ID.
-     * Attempts to locate in cache, document store, then relational database.
-     * Stores book data in different layers (document store and/or cache) as needed.
+     * Attempts to locate in secondary stores by sequence, and relational database other.
+     * Stores book data in secondary stores (document store and/or cache) as needed.
      *
      * @param  int  $id
      * @return array|null
      */
     public function findBookDataById($id)
     {
-        $cacheKey = $this->getCacheKeyForId($id);
-        $cachedBookData = Cache::get($cacheKey);
-        if ($cachedBookData)
-        {
-            Log::info('Book Manager: Retrieved Book '.$id.' from Cache');
-            $this->setLastSource('cache');
-            return $cachedBookData;
-        }
-        elseif ($bookDocument = BookDocument::find($cacheKey))
-        {
-            Log::info('Book Manager: Retrieved Book '.$id.' from Document Store');
-            $bookDocumentData = $bookDocument->toArray();
-            // for consistency, clear mongodb's _id, it is only used for retrieval from the books collection
-            unset($bookDocumentData[$bookDocument->getKeyName()]);
-            Log::info('Book Manager: Storing Book '.$id.' in Cache');
-            Cache::put($cacheKey, $bookDocumentData, $this->getCacheMinutes());
-            $this->setLastSource('document');
-            return $bookDocumentData;
-        }
-        else
-        {
-            Log::info('Book Manager: Retrieving Book '.$id.' from Relational Database');
-            $book = Book::with(array('attributeValues', 'attributeValues.attribute'))->findOrFail($id);
 
-            Log::info('Book Manager: Storing Book '.$id.' in Document Store');
-            $bookData = $book->toArray();
-            $bookDocument = new BookDocument($book->toArray());
-            // Use cache key for book document primary key in books collection
-            $bookDocument->setAttribute($bookDocument->getKeyName(), $cacheKey);
-            $bookDocument->save();
+        $secondaryStores = $this->getSecondaryStores();
+        $cachedData = null;
+        $previousStores = array();
 
-            Log::info('Book Manager: Storing Book '.$id.' in Cache');
-            Cache::put($cacheKey, $bookData, $this->getCacheMinutes());
-            $this->setLastSource('database');
-            return $bookData;
+        foreach ($secondaryStores as $storeName) {
+
+            $store = $this->createStoreInstance($storeName);
+            $cachedData = $store->get($id);
+            if ($cachedData)
+            {
+                Log::info('BookManager: Retrieved Book '.$id.' through: '.$storeName);
+                $this->setLastSource($storeName);
+                foreach ($previousStores as $previousStore) {
+                    $previousStore->put($id, $cachedData);
+                }
+                return $cachedData;
+            } else {
+                $previousStores[] = $store;
+            }
+
         }
+
+        $primaryStore = $this->createStoreInstance($this->getPrimaryStore());
+
+        $data = $primaryStore->get($id);
+        if ($data) {
+            foreach ($secondaryStores as $storeName) {
+                $store = $this->createStoreInstance($storeName);
+                $store->put($id, $data);
+            }
+            $this->setLastSource($this->getPrimaryStore());
+            Log::info('BookManager: Retrieved Book '.$id.' through: '.$this->getPrimaryStore());
+            return $data;
+        }
+
+        $this->setLastSource(null);
+        return null;
+
     }
 
 
-    public function invalidateCacheForId($id)
-    {
-        Log::info('Book Manager: Invalidated Book '.$id.' from Cache');
-        Cache::forget(static::getCacheKeyForId($id));
-    }
-
-    public function invalidateIndexDocumentForId($id)
-    {
-        Log::info('Book Manager: Invalidated Book '.$id.' from Document Store');
-        BookDocument::where((new BookDocument)->getKeyName(), '=', static::getCacheKeyForId($id))->delete();
-    }
 
     public function invalidateAllForId($id)
     {
-        $this->invalidateCacheForId($id);
-        $this->invalidateIndexDocumentForId($id);
+        $stores = $this->getSecondaryStores();
+        foreach ($stores as $storeName) {
+            $store = $this->createStoreInstance($storeName);
+            $store->delete($id);
+        }
     }
 
 

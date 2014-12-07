@@ -17,9 +17,9 @@ class BookManagerTest extends TestCase {
         $book = Book::orderBy('id', 'desc')->firstOrFail();
         BookManager::getInstance()->invalidateAllForId($book->id);
         $bookData = BookManager::getInstance()->findBookDataById($book->id);
-        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'database');
+        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'BookDatabaseStore');
         $bookData = BookManager::getInstance()->findBookDataById($book->id);
-        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'cache');
+        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'BookCacheStore');
         $book->load('attributeValues', 'attributeValues.attribute');
         $this->assertNotNull($book->attributeValues);
 
@@ -28,7 +28,7 @@ class BookManagerTest extends TestCase {
         $attributeValue->save();
 
         $bookData = BookManager::getInstance()->findBookDataById($book->id);
-        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'database');
+        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'BookDatabaseStore');
     }
 
     public function testFirstRetrieval()
@@ -36,7 +36,7 @@ class BookManagerTest extends TestCase {
         $book = Book::orderBy('id', 'desc')->firstOrFail();
         $bookData = BookManager::getInstance()->findBookDataById($book->id);
         $this->assertTrue(!!$bookData);
-        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'database');
+        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'BookDatabaseStore');
     }
 
     public function testCacheRetrieval()
@@ -45,9 +45,9 @@ class BookManagerTest extends TestCase {
         BookManager::getInstance()->invalidateAllForId($book->id);
         $bookData = BookManager::getInstance()->findBookDataById($book->id);
         $this->assertTrue(!!$bookData);
-        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'database');
+        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'BookDatabaseStore');
         $bookData = BookManager::getInstance()->findBookDataById($book->id);
-        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'cache');
+        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'BookCacheStore');
     }
 
     public function testDocumentRetrieval()
@@ -56,10 +56,10 @@ class BookManagerTest extends TestCase {
         BookManager::getInstance()->invalidateAllForId($book->id);
         $bookData = BookManager::getInstance()->findBookDataById($book->id);
         $this->assertTrue(!!$bookData);
-        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'database');
-        BookManager::getInstance()->invalidateCacheForId($book->id);
+        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'BookDatabaseStore');
+        Cache::forget('object:'.$book->id);
         $bookData = BookManager::getInstance()->findBookDataById($book->id);
-        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'document');
+        $this->assertEquals(BookManager::getInstance()->getLastSource(), 'BookDocumentStore');
     }
 
 
